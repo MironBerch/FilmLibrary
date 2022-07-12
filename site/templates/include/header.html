@@ -1,0 +1,37 @@
+{% load movie_tags%}
+
+<header class="header">
+
+    
+    <h3>Категории</h3>
+    <ul>
+        <h3>Header</h 3>
+        {% get_categories as categories %}
+        {% for category in categories %}
+            <li><a href="/">{{ category.name }}</a></li>
+        {% endfor %}
+    </ul>
+
+    <form action="{% url 'filter' %}" method="get">    
+        <h3>Жанры</h3>
+        <ul>
+            {% for genre in view.get_genre %}
+                <li>
+                    <input type="checkbox" name="genre" value="{{ genre.id }}">
+                    <span>{{ genre.name }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+        <h3>Года</h3>
+        <ul>
+            {% for movie in view.get_year %}
+                <li>
+                    <input type="checkbox" name="year" value="{{ movie.year }}">
+                    <span>{{ movie.year }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+        <button type="submit">Найти</button>
+    </form>
+    {% get_last_movies count=3 %}
+</header>

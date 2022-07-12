@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %} {{ title }} :{{ actor.name }}: {{ block.super }} {% endblock %}
+
+{% block content %}
+
+
+        <h3>
+            {{ actor.name }}
+        </h3>
+        <div>
+            <img style="height: 500px; width: 420px;" src="{{ actor.image.url }}" alt="">
+        </div>
+        <ul>
+            <li>
+                <span><b>Возраст</b> {{ actor.age }}</span>
+            </li>
+            <li><span><b>Режиссер в:</b>
+                    {% for movie in actor.film_director.all %}
+                        {{ movie.title }}
+                    {% endfor %}
+                </span></li>
+            <li><span><b>Актер в:</b>
+                {% for movie in actor.film_actor.all %}
+                    {{ movie.title }}
+                {% endfor %}
+            </span></li>
+            <li>
+                <p>Об актёре: {{ actor.description }}</p>
+            </li>
+        </ul>
+
+    
+{% endblock %} 

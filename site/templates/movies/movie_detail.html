@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %} {{ title }} :: {{ block.super }} {% endblock %}
+
+{% block content %}
+
+
+        <img style="height: 300px; width: 400px;" src="{{ movie.poster.url }}" alt="no img">
+        <h3>
+            {{ movie.title }}
+        </h3>
+        <ul>
+            <li><span><b>Год:</b> {{ movie.year }}</span></li>
+            <li>
+                <span><b>Режиссер:</b>
+                    {% for director in movie.director.all %}
+                        <a href="{% url 'actor_detail' director.name %}">{{ director.name }}</a>
+                    {% endfor %}
+                </span>
+            </li>
+            <li><span><b>Актеры:</b>
+                {% for actor in movie.actors.all %}
+                    <a href="{% url 'actor_detail' actor.name %}">{{ actor.name }}</a>
+                {% endfor %}
+            </span>
+            </li>
+            <li><span><b>Жанр:</b>
+                {% for genre in movie.genres.all %}
+                    {{ genre.name }}
+                {% endfor %}
+            </span>
+            </li>
+            <li><span><b>Премьера в мире:</b> {{ movie.premiere }}</span></li>
+            <li><span><b>Бюджет:</b> ${{ movie.budget }}</span></li>
+            <li><span><b>Сборы в мире:</b> ${{ movie.fees }}</span></li>
+        </ul>
+        <div>
+            {% for image in movie.movieshots_set.all %}
+                <img src="{{ image.image.url }}" alt="{{ image.description }}" >
+            {% endfor %}
+        </div>
+
+
+        <h4>{{ movie.reviews_set.count }} Отзывова</h4>
+
+
+        {% for review in movie.get_review %}
+            <div>
+                <h4>{{ review.name }}</h4>
+                <p>{{ review.text }}</p>
+                
+                {% for rew in review.reviews_set.all %}
+                    <div>
+                        <h4>{{ rew.name }}</h4>
+                        <p>{{ rew.text }}</p>
+                    </div>
+                {% endfor %}
+                
+                <h5><a href="#formReview" onclick="addReview('{{ review.name }}', '{{ review.id }}')">ответить</a></h5>
+            </div>
+        {% endfor %}
+
+
+        <div>
+            <h3>Оставить отзыв</h3>
+            <form action="{% url 'add_review' movie.id %}" method="post" id="formReview">
+                {% csrf_token %}
+                <input type="hidden" name="parent" id="contactparent" value=" ">
+                <div>
+                    <span>отзыв:</span>
+                    <textarea id="contactcomment" required="" name="text"></textarea>
+                </div>
+                <div>
+                    <span>
+                        <h5>Имя:</h5> <input type="text" id="contactusername" required="" name="name">
+                    </span>
+                </div>
+                <div>
+                    <input type="email" id="contactemail" required="" name="email">
+                </div>
+                <button type="submit">Отправить</button>
+            </form>
+        </div>
+
+
+        <script>
+            function addReview(name, id) {
+                document.getElementById("contactparent").value = id;
+                document.getElementById("contactcomment").innerText = `${name}, `
+        }
+        </script>
+
+    
+{% endblock %}
